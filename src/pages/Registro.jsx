@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import fondo from "../assets/mi-fondo.jpg";
 
 function Registro() {
   const [isNewUser, setIsNewUser] = useState(true);
@@ -12,7 +13,7 @@ function Registro() {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rol, setRol] = useState("PLACE_OWNER");
+  const [rol, setRol] = useState("PLACES_OWNER");
 
   const [placeName, setPlaceName] = useState("");
   const [nit, setNit] = useState("");
@@ -43,7 +44,7 @@ function Registro() {
             email,
             password,
           }
-        : { dni, dni_type: dniType },
+        : { dni },
       place: isNewPlace
         ? {
             name: placeName,
@@ -59,7 +60,7 @@ function Registro() {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://3.148.27.206/api/places", {
+      const response = await fetch("http://3.148.27.206/api/places/register/user-place", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -79,8 +80,18 @@ function Registro() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-5xl">
+    <div
+      className="min-h-screen bg-cover bg-center flex items-center justify-center"
+      style={{ backgroundImage: `url(${fondo})` }}
+    >
+      <div className="bg-white bg-opacity-90 p-8 rounded-lg shadow-lg w-full max-w-6xl">
+        <button
+          onClick={() => navigate("/dashboard")}
+          className="mb-4 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded"
+        >
+          Volver al Dashboard
+        </button>
+
         <h2 className="text-2xl font-bold text-center text-green-600 mb-6">
           Registro de Tienda y Usuario
         </h2>
@@ -89,7 +100,7 @@ function Registro() {
 
         <form onSubmit={handleRegistro}>
           <div className="flex flex-col md:flex-row gap-6">
-            {/* Sección Usuario */}
+            {/* Usuario */}
             <div className="w-full md:w-1/2">
               <h3 className="text-lg font-semibold mb-2">Información del Usuario</h3>
               <div className="flex gap-4 mb-4">
@@ -98,20 +109,20 @@ function Registro() {
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-medium">Tipo de documento</label>
-                <select value={dniType} onChange={(e) => setDniType(e.target.value)} className="w-full border rounded px-3 py-2">
-                  <option value="cc">Cédula</option>
-                  <option value="ti">Tarjeta de Identidad</option>
-                  <option value="ce">Cédula de Extranjería</option>
-                </select>
-              </div>
-              <div className="mb-4">
                 <label className="block text-sm font-medium">Número de documento</label>
                 <input type="text" value={dni} onChange={(e) => setDni(e.target.value)} className="w-full border rounded px-3 py-2" />
               </div>
 
               {isNewUser && (
                 <>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium">Tipo de documento</label>
+                    <select value={dniType} onChange={(e) => setDniType(e.target.value)} className="w-full border rounded px-3 py-2">
+                      <option value="cc">Cédula</option>
+                      <option value="ti">Tarjeta de Identidad</option>
+                      <option value="ce">Cédula de Extranjería</option>
+                    </select>
+                  </div>
                   <div className="mb-4">
                     <label className="block text-sm font-medium">Nombres</label>
                     <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="w-full border rounded px-3 py-2" />
@@ -137,13 +148,13 @@ function Registro() {
               <div className="mb-4">
                 <label className="block text-sm font-medium">Rol</label>
                 <select value={rol} onChange={(e) => setRol(e.target.value)} className="w-full border rounded px-3 py-2">
-                  <option value="PLACE_OWNER">Dueño</option>
+                  <option value="PLACES_OWNER">Dueño</option>
                   <option value="PLACE_EMPLOYEE">Trabajador</option>
                 </select>
               </div>
             </div>
 
-            {/* Sección Tienda */}
+            {/* Tienda */}
             <div className="w-full md:w-1/2">
               <h3 className="text-lg font-semibold mb-2">Información de la Tienda</h3>
               <div className="flex gap-4 mb-4">
