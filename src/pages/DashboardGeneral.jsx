@@ -64,7 +64,7 @@ function DashboardGeneral() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          is_enabled: !currentStatus,
+          enabled: !currentStatus,
         }),
       });
 
@@ -74,7 +74,7 @@ function DashboardGeneral() {
 
       setPlaces((prevPlaces) =>
         prevPlaces.map((item) =>
-          item.place.id === placeId ? { ...item, is_enabled: !currentStatus } : item
+          item.place.id === placeId ? { ...item, enabled: !currentStatus } : item
         )
       );
     } catch (error) {
@@ -139,7 +139,7 @@ function DashboardGeneral() {
             {places.length > 0 ? (
               places.map((item, index) => {
                 
-                const isDisabled = !item.is_enabled;
+                const isDisabled = !item.place.enabled;
                 const isAggregator = user?.role === "aggregator";
 
                 return (
@@ -167,9 +167,9 @@ function DashboardGeneral() {
                         </span>
                       </p>
                       <p className={`text-sm font-semibold mt-2 ${
-                        item.is_enabled ? "text-green-600" : "text-red-600"
+                        item.place.enabled ? "text-green-600" : "text-red-600"
                       }`}>
-                        {item.is_enabled ? "Habilitado" : "Deshabilitado"}
+                        {item.place.enabled ? "Habilitado" : "Deshabilitado"}
                       </p>
                     </div>
 
@@ -179,13 +179,13 @@ function DashboardGeneral() {
                         <button
                           onClick={(e) => {
                             e.stopPropagation(); // evita abrir la tienda
-                            toggleEnablePlace(item.place.id, item.is_enabled);
+                            toggleEnablePlace(item.place.id, item.place.enabled);
                           }}
                           className={`w-full py-2 px-4 rounded-lg font-semibold text-white transition ${
-                            item.is_enabled ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
+                            item.place.enabled ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
                           }`}
                         >
-                          {item.is_enabled ? "Deshabilitar" : "Habilitar"}
+                          {item.place.enabled ? "Deshabilitar" : "Habilitar"}
                         </button>
                       </div>
                     )}
