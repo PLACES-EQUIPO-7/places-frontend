@@ -2,10 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import fondo from "../assets/mi-fondo.jpg";
 
-function Registro() {
+export default function Registro() {
+  const navigate = useNavigate();
+
+  // Estados para formulario
   const [isNewUser, setIsNewUser] = useState(true);
   const [isNewPlace, setIsNewPlace] = useState(true);
 
+  // Datos usuario
   const [dni, setDni] = useState("");
   const [dniType, setDniType] = useState("cc");
   const [firstName, setFirstName] = useState("");
@@ -13,8 +17,9 @@ function Registro() {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rol, setRol] = useState("PLACES_OWNER");
+  const [rol, setRol] = useState("PLACE_OWNER"); // o "WORKER"
 
+  // Datos tienda
   const [placeName, setPlaceName] = useState("");
   const [nit, setNit] = useState("");
   const [address, setAddress] = useState("");
@@ -23,10 +28,10 @@ function Registro() {
   const [longitude, setLongitude] = useState("");
 
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const handleRegistro = async (e) => {
     e.preventDefault();
+    setError("");
 
     if (!dni || !rol || !nit) {
       setError("Cédula, rol y NIT son obligatorios.");
@@ -55,24 +60,46 @@ function Registro() {
             longitude: parseFloat(longitude),
           }
         : { nit },
-      rol,
+      role: rol,
     };
+
+    console.log("Payload enviado:", JSON.stringify(payload, null, 2));
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://3.148.27.206/api/places/register/user-place", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error("No se pudo completar el registro.");
+      if (!token) {
+        setError("No autorizado. Por favor inicia sesión.");
+        return;
       }
 
+      const response = await fetch(
+        "http://3.148.27.206/api/places/register/user-place",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const text = await response.text();
+      console.log("Respuesta del servidor:", text);
+
+      if (!response.ok) {
+        let errorMsg = "No se pudo completar el registro.";
+        try {
+          const data = text ? JSON.parse(text) : null;
+          if (data?.message) errorMsg = data.message;
+        } catch {
+          // No es JSON
+        }
+        throw new Error(errorMsg);
+      }
+
+      // Registro OK
+      alert("Registro exitoso");
       navigate("/dashboard");
     } catch (err) {
       setError(err.message);
@@ -201,5 +228,3 @@ function Registro() {
     </div>
   );
 }
-
-export default Registro;

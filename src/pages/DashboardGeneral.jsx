@@ -10,6 +10,13 @@ function DashboardGeneral() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Limpiar datos de place cada vez que entro al DashboardGeneral
+    localStorage.removeItem("placeId");
+    localStorage.removeItem("placeNit");
+    localStorage.removeItem("placeName");
+    localStorage.removeItem("placeAddress");
+    localStorage.removeItem("placeRole");
+
     const storedUser = localStorage.getItem("user");
     const token = localStorage.getItem("token");
 
@@ -51,6 +58,7 @@ function DashboardGeneral() {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
+    // Ya no borramos los datos de place aquí
     navigate("/");
   };
 
@@ -81,6 +89,18 @@ function DashboardGeneral() {
       console.error(error.message);
     }
   };
+
+const handlePlaceClick = (place, role, isDisabled) => {
+  if (isDisabled && user?.role !== "aggregator") return; // bloquea click si está deshabilitado y no es aggregator
+
+  localStorage.setItem("placeId", place.id);
+  localStorage.setItem("placeNit", place.nit);
+  localStorage.setItem("placeName", place.name);
+  localStorage.setItem("placeAddress", place.address);
+  localStorage.setItem("placeRole", role);
+
+  navigate(`/tiendas/${place.id}`);
+};
 
   return (
     <div
@@ -138,7 +158,6 @@ function DashboardGeneral() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {places.length > 0 ? (
               places.map((item, index) => {
-                
                 const isDisabled = !item.place.enabled;
                 const isAggregator = user?.role === "aggregator";
 
@@ -151,24 +170,27 @@ function DashboardGeneral() {
                       } ${
                         isDisabled && !isAggregator ? "cursor-not-allowed" : "cursor-pointer"
                       }`}
-                      onClick={() => {
-                        if (!isDisabled || isAggregator) {
-                          navigate(`/tiendas/${item.place.id}`);
-                        }
-                      }}
+                      onClick={() => handlePlaceClick(item.place, item.role, isDisabled)}
                     >
                       <h3 className="text-xl font-bold text-green-700 mb-2">{item.place.name}</h3>
                       <p className="text-sm mb-1">
                         Dirección: <span className="font-medium">{item.place.address}</span>
                       </p>
                       <p className="text-sm mb-1">
-                        Rol: <span className="font-semibold">
-                          {isAggregator ? "Administrador" : item.role === "PLACE_OWNER" ? "Dueño" : "Trabajador"}
+                        Rol:{" "}
+                        <span className="font-semibold">
+                          {isAggregator
+                            ? "Administrador"
+                            : item.role === "PLACE_OWNER"
+                            ? "Dueño"
+                            : "Trabajador"}
                         </span>
                       </p>
-                      <p className={`text-sm font-semibold mt-2 ${
-                        item.place.enabled ? "text-green-600" : "text-red-600"
-                      }`}>
+                      <p
+                        className={`text-sm font-semibold mt-2 ${
+                          item.place.enabled ? "text-green-600" : "text-red-600"
+                        }`}
+                      >
                         {item.place.enabled ? "Habilitado" : "Deshabilitado"}
                       </p>
                     </div>
@@ -178,11 +200,13 @@ function DashboardGeneral() {
                       <div className="absolute bottom-4 left-4 right-4">
                         <button
                           onClick={(e) => {
-                            e.stopPropagation(); // evita abrir la tienda
+                            e.stopPropagation();
                             toggleEnablePlace(item.place.id, item.place.enabled);
                           }}
                           className={`w-full py-2 px-4 rounded-lg font-semibold text-white transition ${
-                            item.place.enabled ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
+                            item.place.enabled
+                              ? "bg-red-500 hover:bg-red-600"
+                              : "bg-green-500 hover:bg-green-600"
                           }`}
                         >
                           {item.place.enabled ? "Deshabilitar" : "Habilitar"}
@@ -192,9 +216,7 @@ function DashboardGeneral() {
                   </div>
                 );
               })
-            ) 
-            
-            : (
+            ) : (
               <p className="text-center text-white text-lg col-span-full">
                 No tienes lugares registrados.
               </p>
