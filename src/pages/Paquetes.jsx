@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import backgroundImage from "../assets/cajas.jpg";
 
 function Paquetes() {
@@ -7,7 +8,6 @@ function Paquetes() {
 
   const placeId = localStorage.getItem("placeId");
   const placeName = localStorage.getItem("placeName");
-  const placeRole = localStorage.getItem("placeRole");
   const token = localStorage.getItem("token");
 
   const [paquetes, setPaquetes] = useState([]);
@@ -54,10 +54,10 @@ function Paquetes() {
         className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center p-6"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
-        <p className="text-red-500 text-lg mb-4">{error}</p>
+        <p className="text-red-600 text-lg mb-4 font-semibold">{error}</p>
         <button
           onClick={() => navigate(-1)}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+          className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
         >
           Volver
         </button>
@@ -70,44 +70,73 @@ function Paquetes() {
       className="min-h-screen bg-cover bg-center p-6"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="max-w-4xl mx-auto bg-white bg-opacity-95 rounded-xl shadow-lg p-6">
+      <motion.div
+        className="max-w-4xl mx-auto bg-white/90 rounded-2xl shadow-2xl p-8 backdrop-blur-md"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <button
           onClick={() => navigate(-1)}
-          className="mb-6 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+          className="mb-6 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
         >
           ← Volver
         </button>
 
-        <h1 className="text-3xl font-bold text-green-700 mb-2">
-          Paquetes próximos en <span className="italic">{placeName}</span>
+        <h1 className="text-3xl font-extrabold text-green-800 mb-2">
+          Paquetes próximos en{" "}
+          <span className="italic text-green-700">{placeName}</span>
         </h1>
-        <p className="mb-6 text-gray-700 font-semibold">
-          Total de paquetes proximos a llegar: {paquetes.length}
+        <p className="mb-6 text-gray-800 font-medium">
+          Total de paquetes por recibir:{" "}
+          <span className="font-bold">{paquetes.length}</span>
         </p>
 
         {paquetes.length === 0 ? (
-          <p className="text-gray-600">No hay paquetes pendientes por llegar.</p>
+          <p className="text-gray-600 italic">No hay paquetes pendientes por llegar.</p>
         ) : (
           <ul className="space-y-6">
-            {paquetes.map((paq) => (
-              <li
+            {paquetes.map((paq, index) => (
+              <motion.li
                 key={paq.id}
-                className="border p-5 rounded-lg shadow-sm bg-green-50 hover:bg-green-100 transition"
+                className="border p-5 rounded-xl shadow-md bg-green-50 hover:bg-green-100 transition"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
               >
-                <p className="font-semibold text-lg mb-1">Nombre del paquete: {paq.phrase}</p>
-                <p>ID: <span className="font-mono">{paq.id}</span></p>
-                <p>Tipo: <span className="capitalize">{paq.type.toLowerCase().replace("_", " ")}</span></p>
-                <p>Estado: <span className="font-semibold">{paq.status}</span></p>
-                <p>Tipo receptor: {paq.receiver_type}</p>
-                <p>
-                  Fecha entrega:{" "}
-                  {paq.delivered_at ? new Date(paq.delivered_at).toLocaleString() : "No entregado"}
+                <p className="font-semibold text-lg text-green-800 mb-1">
+                  📦 {paq.phrase}
                 </p>
-              </li>
+                <div className="text-sm text-gray-700 space-y-1">
+                  <p>
+                    <strong>ID:</strong>{" "}
+                    <span className="font-mono">{paq.id}</span>
+                  </p>
+                  <p>
+                    <strong>Tipo:</strong>{" "}
+                    <span className="capitalize">
+                      {paq.type.toLowerCase().replace("_", " ")}
+                    </span>
+                  </p>
+                  <p>
+                    <strong>Estado:</strong>{" "}
+                    <span className="font-semibold">{paq.status}</span>
+                  </p>
+                  <p>
+                    <strong>Tipo receptor:</strong> {paq.receiver_type}
+                  </p>
+                  <p>
+                    <strong>Fecha entrega:</strong>{" "}
+                    {paq.delivered_at
+                      ? new Date(paq.delivered_at).toLocaleString()
+                      : "No entregado"}
+                  </p>
+                </div>
+              </motion.li>
             ))}
           </ul>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }
