@@ -42,57 +42,63 @@ function PlaceDashboard() {
       ? "Administrador"
       : "Desconocido";
 
-  return (
-    <div
-      className="min-h-screen bg-cover bg-center p-6"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
+return (
+  <div
+    className="min-h-screen bg-cover bg-center p-6"
+    style={{ backgroundImage: `url(${backgroundImage})` }}
+  >
+    <motion.div
+      className="max-w-4xl mx-auto bg-white/90 rounded-2xl shadow-2xl p-8 backdrop-blur-md relative"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4 }}
     >
-      <motion.div
-        className="max-w-4xl mx-auto bg-white/90 rounded-2xl shadow-2xl p-8 backdrop-blur-md relative"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4 }}
-      >
+      {/* Botones superiores: Perfil y Volver */}
+      <div className="absolute top-4 right-4 flex gap-3">
+        <button
+          onClick={() => navigate(`/tiendas/${place.id}/perfil`)}
+          className="bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold py-2 px-4 rounded-lg shadow transition flex items-center gap-2"
+        >
+          <FaUser className="text-lg" />
+          Mi Perfil
+        </button>
         <button
           onClick={() => navigate("/dashboard")}
-          className="absolute top-4 right-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg shadow transition"
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg shadow transition"
         >
           Volver al inicio
         </button>
+      </div>
 
-        <h1 className="text-3xl font-extrabold text-green-800 mb-2">
-          Bienvenido a <span className="italic">{place.name}</span>
-        </h1>
-        <p className="text-gray-700 mb-1">📍 Dirección: {place.address}</p>
-        <p className="text-gray-700 mb-6">
-          🧑 Rol: <span className="font-semibold">{readableRole}</span>
-        </p>
+      <h1 className="text-3xl font-extrabold text-green-800 mb-2">
+        Bienvenido a <span className="italic">{place.name}</span>
+      </h1>
+      <p className="text-gray-700 mb-1">📍 Dirección: {place.address}</p>
+      <p className="text-gray-700 mb-6">
+        🧑 Rol: <span className="font-semibold">{readableRole}</span>
+      </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <OptionCard
-            title="Paquetes Próximos"
-            icon={<FaBox className="text-3xl text-green-600" />}
-            path={`/tiendas/${place.id}/paquetes`}
-          />
-          <OptionCard
-            title="Inventario"
-            icon={<FaClipboardList className="text-3xl text-green-600" />}
-            path={`/tiendas/${place.id}/inventario`}
-          />
-          <OptionCard
-            title="Facturación"
-            icon={<FaFileInvoiceDollar className="text-3xl text-green-600" />}
-            path={`/tiendas/${place.id}/facturacion`}
-          />
-          <OptionCard
-            title="Mi Perfil"
-            icon={<FaUser className="text-3xl text-green-600" />}
-            path={`/tiendas/${place.id}/perfil`}
-          />
-        </div>
-      </motion.div>
-    </div>
-  );
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <OptionCard
+          title="Paquetes Próximos"
+          icon={<FaBox className="text-3xl text-green-600" />}
+          path={`/tiendas/${place.id}/paquetes`}
+        />
+        <OptionCard
+          title="Inventario"
+          icon={<FaClipboardList className="text-3xl text-green-600" />}
+          path={`/tiendas/${place.id}/inventario`}
+        />
+        <OptionCard
+          title="Facturación"
+          icon={<FaFileInvoiceDollar className="text-3xl text-green-600" />}
+          path={`/tiendas/${place.id}/facturacion`}
+        />
+      </div>
+    </motion.div>
+  </div>
+);
+
 }
 
 function OptionCard({ title, path, icon }) {
