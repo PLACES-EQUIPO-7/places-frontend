@@ -132,23 +132,24 @@ function Login() {
       </div>
   
       {/* Botón de Iniciar con Google */}
-      <button
-        type="button"
-        onClick={async () => {
-          try {
-            // TODO: reemplazar con lógica real de OAuth con Google
-            console.log("Redirigiendo a Google...");
-            await new Promise((resolve) => setTimeout(resolve, 500));
-            navigate('/dashboard');
-          } catch (error) {
-            console.error('Error al iniciar sesión con Google', error);
-          }
-        }}
-        className="w-full border border-gray-300 text-gray-700 py-2 rounded-lg font-semibold hover:bg-gray-100 transition flex items-center justify-center"
-      >
-        <CloudCog className="mr-2" size={20} />
-        Ingresar con Google
-      </button>
+            <button
+              type="button"
+              onClick={() => {
+                const clientId = "773842312857-8gshehjogj00rs3klqm02mo8jr707a4b.apps.googleusercontent.com";
+                const redirectUri = "http://localhost:8080/api/places/login/google/callback";
+                const scope = encodeURIComponent("openid email profile");
+                const responseType = "code";
+
+                const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=${responseType}&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}`;
+
+                window.location.href = googleAuthUrl;
+              }}
+              className="w-full border border-gray-300 text-gray-700 py-2 rounded-lg font-semibold hover:bg-gray-100 transition flex items-center justify-center"
+            >
+              <CloudCog className="mr-2" size={20} />
+              Ingresar con Google
+            </button>
+
     </div>
   );
   

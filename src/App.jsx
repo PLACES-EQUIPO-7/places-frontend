@@ -9,12 +9,14 @@ import Facturacion from './pages/Facturacion';
 import Perfil from './pages/Perfil';
 import EscanearPaquete from './pages/EscanearPaquete';
 import LayoutConFooter from './components/LayoutConFooter';
+import GoogleCallback from './components/GoogleCallback'; 
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/google-callback" element={<GoogleCallback />} /> 
 
       {/* Agrupar todo lo que debe llevar footer dentro del layout */}
       <Route element={<LayoutConFooter />}>

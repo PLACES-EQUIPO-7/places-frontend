@@ -79,6 +79,7 @@ const Perfil = () => {
             <p><strong>Email:</strong> {userData.email}</p>
             <p><strong>Cédula:</strong> {userData.dni}</p>
             <p><strong>Tipo:</strong> {userData.dni_type}</p>
+            <p><strong>Telefono:</strong> {userData.tel}</p>
           </div>
         ) : (
           <p className="text-center text-gray-600">Cargando datos del usuario...</p>

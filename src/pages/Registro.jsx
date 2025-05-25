@@ -15,6 +15,7 @@ export default function Registro() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userName, setUserName] = useState("");
+  const [tel, setTel] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -198,6 +199,15 @@ export default function Registro() {
                       type="text"
                       value={userName}
                       onChange={(e) => setUserName(e.target.value)}
+                      className="input"
+                    />
+                  </div>
+                                    <div className="mb-4">
+                    <label className="block text-sm font-medium">Telefono</label>
+                    <input
+                      type="text"
+                      value={tel}
+                      onChange={(e) => setTel(e.target.value)}
                       className="input"
                     />
                   </div>
