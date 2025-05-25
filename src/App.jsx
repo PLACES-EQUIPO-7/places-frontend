@@ -7,21 +7,26 @@ import Paquetes from './pages/Paquetes';
 import Inventario from './pages/Inventario';
 import Facturacion from './pages/Facturacion';
 import Perfil from './pages/Perfil';
+import EscanearPaquete from './pages/EscanearPaquete';
+import LayoutConFooter from './components/LayoutConFooter';
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/dashboard" element={<DashboardGeneral />} />
-      <Route path="/registro" element={<Registro />} /> 
-      <Route path="/tiendas/:placeId" element={<PlaceDashboard />} />
 
-      {/* Rutas para las vistas dentro de una tienda */}
-      <Route path="/tiendas/:placeId/paquetes" element={<Paquetes />} />
-      <Route path="/tiendas/:placeId/inventario" element={<Inventario />} />
-      <Route path="/tiendas/:placeId/facturacion" element={<Facturacion />} />
-      <Route path="/tiendas/:placeId/perfil" element={<Perfil />} />
+      {/* Agrupar todo lo que debe llevar footer dentro del layout */}
+      <Route element={<LayoutConFooter />}>
+        <Route path="/dashboard" element={<DashboardGeneral />} />
+        <Route path="/registro" element={<Registro />} /> 
+        <Route path="/tiendas/:placeId" element={<PlaceDashboard />} />
+        <Route path="/tiendas/:placeId/paquetes" element={<Paquetes />} />
+        <Route path="/tiendas/:placeId/inventario" element={<Inventario />} />
+        <Route path="/tiendas/:placeId/facturacion" element={<Facturacion />} />
+        <Route path="/tiendas/:placeId/perfil" element={<Perfil />} />
+        <Route path="/tiendas/:placeId/EscanearPaquete" element={<EscanearPaquete />} />
+      </Route>
     </Routes>
   );
 }

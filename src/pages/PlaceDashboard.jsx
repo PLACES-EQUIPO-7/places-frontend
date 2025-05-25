@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaBox, FaClipboardList, FaFileInvoiceDollar, FaUser } from "react-icons/fa";
+import { FaBox, FaClipboardList, FaFileInvoiceDollar, FaUser, FaQrcode  } from "react-icons/fa";
 import backgroundImage from "../assets/cajas.jpg";
 
 function PlaceDashboard() {
@@ -93,6 +93,11 @@ return (
           title="Facturación"
           icon={<FaFileInvoiceDollar className="text-3xl text-green-600" />}
           path={`/tiendas/${place.id}/facturacion`}
+        />
+                <OptionCard
+          title="Escanear Paquete"
+          icon={<FaQrcode className="text-3xl text-green-600" />}
+          path={`/tiendas/${place.id}/EscanearPaquete`}
         />
       </div>
     </motion.div>
