@@ -1,69 +1,99 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import backgroundImage from "../assets/mi-fondo.jpg";
 
 function DashboardGeneral() {
   const [user, setUser] = useState(null);
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    localStorage.removeItem("placeId");
-    localStorage.removeItem("placeNit");
-    localStorage.removeItem("placeName");
-    localStorage.removeItem("placeAddress");
-    localStorage.removeItem("placeRole");
+  const params = new URLSearchParams(location.search);
+  const urlToken = params.get("token");
 
-    const storedUser = localStorage.getItem("user");
-    const token = localStorage.getItem("token");
+  if (urlToken) {
+    localStorage.setItem("token", urlToken);
 
-    if (!storedUser || !token) {
+    // Limpiamos URL para no mostrar token
+    params.delete("token");
+    const newUrl =
+      location.pathname + (params.toString() ? "?" + params.toString() : "");
+    navigate(newUrl, { replace: true });
+    return; // Para que este efecto termine y se ejecute el siguiente
+  }
+
+  const token = localStorage.getItem("token");
+  if (!token) {
+    navigate("/");
+    return;
+  }
+
+  const fetchUserDetails = async () => {
+    try {
+      const response = await fetch("http://3.148.27.206/api/places/user/details", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) throw new Error("No se pudo obtener la información del usuario");
+
+      const userData = await response.json();
+
+      setUser(userData);
+      localStorage.setItem("user", JSON.stringify(userData));
+    } catch (error) {
+      console.error(error);
       navigate("/");
-      return;
     }
+  };
 
-    const userData = JSON.parse(storedUser);
-    setUser(userData);
+  fetchUserDetails();
 
-    const fetchPlaces = async () => {
-      try {
-        const response = await fetch("http://3.148.27.206/api/places/my-places", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+  // Fetch lugares (places)
+  const fetchPlaces = async () => {
+    try {
+      const response = await fetch("http://3.148.27.206/api/places/my-places", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) throw new Error("No se pudieron cargar las tiendas");
 
-        if (!response.ok) {
-          throw new Error("No se pudieron cargar las tiendas");
-        }
+      const data = await response.json();
+      setPlaces(data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        const data = await response.json();
-        setPlaces(data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  fetchPlaces();
 
-    fetchPlaces();
-  }, [navigate]);
+  // Limpieza de place info
+  localStorage.removeItem("placeId");
+  localStorage.removeItem("placeNit");
+  localStorage.removeItem("placeName");
+  localStorage.removeItem("placeAddress");
+  localStorage.removeItem("placeRole");
+
+}, [location, navigate]);
+
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
+    localStorage.clear();
     navigate("/");
   };
 
   const toggleEnablePlace = async (placeId, currentStatus) => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`http://3.148.27.206/api/places/${placeId}`, {
+      const res = await fetch(`http://3.148.27.206/api/places/${placeId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -72,21 +102,22 @@ function DashboardGeneral() {
         body: JSON.stringify({ enabled: !currentStatus }),
       });
 
-      if (!response.ok) {
-        throw new Error("Error al actualizar el estado de la tienda");
-      }
+      if (!res.ok) throw new Error("Error al actualizar el estado de la tienda");
 
       setPlaces((prev) =>
         prev.map((item) =>
-          item.place.id === placeId ? { ...item, place: { ...item.place, enabled: !currentStatus } } : item
+          item.place.id === placeId
+            ? { ...item, place: { ...item.place, enabled: !currentStatus } }
+            : item
         )
       );
-    } catch (error) {
-      console.error(error.message);
+    } catch (err) {
+      console.error(err.message);
     }
   };
 
   const handlePlaceClick = (place, role, isDisabled) => {
+    // Si está deshabilitado y usuario no es agregador, no hacer nada
     if (isDisabled && user?.role !== "aggregator") return;
 
     localStorage.setItem("placeId", place.id);
@@ -101,9 +132,7 @@ function DashboardGeneral() {
   return (
     <div
       className="min-h-screen bg-cover bg-center p-6"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-      }}
+      style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="bg-white/70 backdrop-blur-md rounded-2xl p-6 shadow-lg max-w-7xl mx-auto">
         {/* Header */}
@@ -122,7 +151,7 @@ function DashboardGeneral() {
           </button>
         </div>
 
-        {/* Crear lugar */}
+        {/* Botón Crear lugar solo para agregadores */}
         {user?.role === "aggregator" && (
           <div className="text-center mb-6">
             <button
@@ -141,7 +170,7 @@ function DashboardGeneral() {
           </h2>
         </div>
 
-        {/* Grid de tiendas */}
+        {/* Grid de lugares */}
         {loading ? (
           <p className="text-center text-gray-600 animate-pulse">Cargando tiendas...</p>
         ) : error ? (
@@ -162,13 +191,10 @@ function DashboardGeneral() {
                     } ${
                       isDisabled && !isAggregator ? "cursor-not-allowed" : "cursor-pointer"
                     }`}
-                    onClick={() =>
-                      handlePlaceClick(item.place, item.role, isDisabled)
-                    }
+                    onClick={() => handlePlaceClick(item.place, item.role, isDisabled)}
+                    title={isDisabled ? "Este lugar está deshabilitado" : undefined}
                   >
-                    <h3 className="text-xl font-bold text-green-700 mb-2">
-                      {item.place.name}
-                    </h3>
+                    <h3 className="text-xl font-bold text-green-700 mb-2">{item.place.name}</h3>
                     <p className="text-gray-700 mb-1">
                       <strong>Dirección:</strong> {item.place.address}
                     </p>
@@ -188,25 +214,6 @@ function DashboardGeneral() {
                       {item.place.enabled ? "Habilitado" : "Deshabilitado"}
                     </p>
                   </div>
-
-                  {/* Botón para habilitar/deshabilitar */}
-                   {/*isAggregator && (
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleEnablePlace(item.place.id, item.place.enabled);
-                        }}
-                        className={`w-full py-2 px-4 rounded-lg font-semibold text-white transition ${
-                          item.place.enabled
-                            ? "bg-red-500 hover:bg-red-600"
-                            : "bg-green-500 hover:bg-green-600"
-                        }`}
-                      >
-                        {item.place.enabled ? "Deshabilitar" : "Habilitar"}
-                      </button>
-                    </div>
-                  )*/} 
                 </div>
               );
             })}
