@@ -52,7 +52,7 @@ export default function Inventario() {
   return (
     <div
       className="min-h-screen bg-cover bg-center p-6"
-      style={{ backgroundImage: 'url("/src/assets/mi-fondo.jpg")' }}
+      style={{ backgroundImage: 'url("/src/assets/cajas.jpg")' }}
     >
       <motion.div
         initial={{ opacity: 0, y: 30 }}

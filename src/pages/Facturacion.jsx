@@ -118,10 +118,10 @@ export default function Facturacion() {
             {/* Lista de paquetes entregados */}
             <section>
               <h2 className="text-2xl font-semibold mb-3 text-gray-800">
-                Paquetes entregados:
+                Paquetes facturados:
               </h2>
               {facturacion.delivered_shipments.length === 0 ? (
-                <p className="text-gray-600">No hay paquetes entregados este mes.</p>
+                <p className="text-gray-600">No hay paquetes facturados mes.</p>
               ) : (
                 <ul className="space-y-4 max-h-72 overflow-y-auto">
                   {facturacion.delivered_shipments.map((paquete) => {
