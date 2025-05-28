@@ -190,7 +190,7 @@ function DashboardGeneral() {
                   </div>
 
                   {/* Botón para habilitar/deshabilitar */}
-                  {isAggregator && (
+                   {/*isAggregator && (
                     <div className="absolute bottom-4 left-4 right-4">
                       <button
                         onClick={(e) => {
@@ -206,7 +206,7 @@ function DashboardGeneral() {
                         {item.place.enabled ? "Deshabilitar" : "Habilitar"}
                       </button>
                     </div>
-                  )}
+                  )*/} 
                 </div>
               );
             })}
