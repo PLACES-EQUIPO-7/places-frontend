@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, User, Lock } from "lucide-react";
 import { motion } from "framer-motion";
-import cajas from "../assets/cajas.jpg"; // Asegúrate de que la ruta sea correcta
+import cajas from "../assets/cajas.jpg"; 
 
 const Perfil = () => {
   const navigate = useNavigate();
@@ -79,7 +79,6 @@ const Perfil = () => {
             <p><strong>Email:</strong> {userData.email}</p>
             <p><strong>Cédula:</strong> {userData.dni}</p>
             <p><strong>Tipo:</strong> {userData.dni_type}</p>
-            <p><strong>Telefono:</strong> {userData.tel}</p>
           </div>
         ) : (
           <p className="text-center text-gray-600">Cargando datos del usuario...</p>

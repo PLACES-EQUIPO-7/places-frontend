@@ -10,6 +10,8 @@ import Perfil from './pages/Perfil';
 import EscanearPaquete from './pages/EscanearPaquete';
 import LayoutConFooter from './components/LayoutConFooter';
 import GoogleCallback from './components/GoogleCallback'; 
+import ConfirmarPaquete from './pages/ConfirmarPaquete';
+
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
         <Route path="/tiendas/:placeId/facturacion" element={<Facturacion />} />
         <Route path="/tiendas/:placeId/perfil" element={<Perfil />} />
         <Route path="/tiendas/:placeId/EscanearPaquete" element={<EscanearPaquete />} />
+        <Route path="/tiendas/:placeId/confirmar-paquete" element={<ConfirmarPaquete />} />
+
       </Route>
     </Routes>
   );
