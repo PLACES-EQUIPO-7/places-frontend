@@ -15,7 +15,7 @@ const ConfirmarPaquete = () => {
 
   const instruccionesPorCaso = {
     "PICK_UP-PENDING": "Verifica que coincidan los datos físicos antes de continuar.",
-    "PICK_UP-RECEIVED": "Este paquete ya fue recibido. Puedes proceder con la entrega.",
+    "PICK_UP-RECEIVED": "Verifica con el comprador que el paquete este en buenas condiciones.",
     "DEVOLUTION-PENDING": "Este paquete está en proceso de devolución. Asegúrate de que se devuelva correctamente.",
     "DEVOLUTION-RECEIVED": "Estas a punto de entregar el paquete a la colecta. Confirma el registro final de esta devolución.",
   };

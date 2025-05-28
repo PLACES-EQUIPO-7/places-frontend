@@ -49,16 +49,16 @@ const EscanearPaquete = () => {
       setPaquete(data); // Guardamos el paquete para enviarlo después
 
       if (type === "PICK_UP" && status === "RECEIVED") {
-        setMensaje(`✅ Paquete listo para entregar: ${phrase}`);
+        setMensaje(`Paquete listo para entregar`);
         setMostrarContinuar(true);
       } else if (type === "PICK_UP" && status === "PENDING") {
-        setMensaje(`⏳ Te llegara un paquete: ${phrase}`);
+        setMensaje(`⏳ Te llegara un paquete`);
         setMostrarContinuar(true);
       } else if (type === "DEVOLUTION" && status === "PENDING") {
-        setMensaje(`♻️ Paquete devuelto por parte del cliente: ${phrase}`);
+        setMensaje(`♻️ Paquete devuelto por parte del cliente`);
         setMostrarContinuar(true);
       } else if (type === "DEVOLUTION" && status === "RECEIVED") {
-        setMensaje(`📥 Devolver a la colecta: ${phrase}`);
+        setMensaje(`📥 Devolver a la colecta`);
         setMostrarContinuar(true);
       } else {
         setMensaje(`📦 Paquete con estado desconocido: ${status}`);
